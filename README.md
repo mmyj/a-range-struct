@@ -40,7 +40,7 @@ total += nums[i]*rangeCount
 每次调用`ACC`方法需要随机访问2次`rangeDesc`数组，调用`Total`方法需要遍历一次`nums`数组，所以算法复杂度是`O(m+n)`
 
 ## 测试
-分别测试了长度为`50、100、200、500、1000、10000、100000`的`nums`数组，基准算法使用的是每次调用`ACC`方法都对区间进行遍历求和累加，测试结果如下
+分别测试了长度为`50、100、200、500、1000、10000、100000`的`nums`数组，基准算法`RoughRange`使用的是每次调用`ACC`方法都对区间进行遍历求和累加，测试结果如下
 ```cgo
 BenchmarkRangeRandComparison/50_RoughRange-8         	 5153847	       205.5 ns/op
 BenchmarkRangeRandComparison/50_Range-8              	 6104293	       193.1 ns/op
