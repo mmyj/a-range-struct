@@ -9,7 +9,7 @@ type ranger interface {
 
 type Range struct {
 	nums       []int
-	rangeDescs []rangeDesc
+	rangeDescs []rangeDesc // rangeDescs下标从1开始
 }
 
 // rangeDesc 标记下标处左右区间的数量
@@ -50,7 +50,7 @@ func (r *Range) ACC(left, right int) {
 func (r *Range) Total() (total int) {
 	var rCount int
 	for i, v := range r.nums {
-		rCount += r.rangeDescs[i+1].l
+		rCount += r.rangeDescs[i+1].l // rangeDescs下标从1开始
 		rCount -= r.rangeDescs[i].r
 		total += v * rCount
 	}
