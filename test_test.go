@@ -91,7 +91,7 @@ type accRange struct {
 	r int
 }
 
-func TestAllRange(t *testing.T) {
+func TestRange(t *testing.T) {
 	numsList := [][]int{
 		{1, 2, 3, 4, 5},
 		{},
@@ -112,12 +112,11 @@ func TestAllRange(t *testing.T) {
 	}
 	for _, nums := range numsList {
 		for i, accs := range accsList {
-			baseTestUnit(t, fmt.Sprintf("%v_%d", nums, i), func(r ranger) {
+			testUnit(t, fmt.Sprintf("%v_%d", nums, i), nums, func(r ranger) {
 				for _, acc := range accs {
 					r.ACC(acc.l, acc.r)
 				}
-			},
-				newRoughRange(nums), NewRange(nums), NewSegRange(nums), NewPrefixSumRange(nums))
+			})
 		}
 	}
 }
@@ -155,7 +154,7 @@ func TestAllRangeRand(t *testing.T) {
 				r.ACC(acc.l, acc.r)
 			}
 		},
-			newRoughRange(randNums), NewRange(randNums), NewSegRange(randNums))
+			newRoughRange(randNums), NewRange(randNums), NewSegRange(randNums), NewPrefixSumRange(randNums))
 	}
 }
 

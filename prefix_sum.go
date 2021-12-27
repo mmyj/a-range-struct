@@ -22,7 +22,15 @@ func NewPrefixSumRange(nums []int) *PrefixSumRange {
 }
 
 func (psr *PrefixSumRange) ACC(left, right int) int {
-	return psr.prefixSum[right+1] - psr.prefixSum[left+1] + psr.nums[left]
+	if left < 0 || right < 0 || left > right || left >= len(psr.nums) {
+		return 0
+	}
+	if right >= len(psr.nums) {
+		right = len(psr.nums) - 1
+	}
+	re := psr.prefixSum[right+1] - psr.prefixSum[left]
+	psr.total += re
+	return re
 }
 
 func (psr *PrefixSumRange) Total() int {
