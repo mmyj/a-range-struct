@@ -67,3 +67,17 @@ BenchmarkRangeRandComparison/100000_RangeWithRangeDescs-8            2792      5
 `RangeWithRangeDescs`测试是考虑到每次调用`NewRange`构造时都会`alloc`一个新的`rangeDesc`数组，这会影响测试结果，于是实现了一个复用`rangeDesc`数组的构造方法
 
 测试结论是数据规模在`200`以下时，`ACC`时直接遍历求和的算法性能更好；大于`200`时，通过记录区间信息，最后求和的算法性能会更好，随着数据规模增大，性能差距大约是4倍
+
+
+# 20211228 补充
+## 线段树求解
+
+使用线段树，构造树阶段，需要遍历2遍`nums`，复杂度是`O(n)`，每次调用`ACC`方法是`O(logn)`，算法复杂度是`O(mlogn+n)`
+
+相较于标记边界解法，线段树可以做到调用`ACC`时就返回区间和
+
+对比测试结果如下
+```cgo
+BenchmarkRange-8   	    2648	    423617 ns/op
+BenchmarkSegRange-8   	     444	   2702813 ns/op
+```

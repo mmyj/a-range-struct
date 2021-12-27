@@ -2,7 +2,6 @@ package a_range_struct
 
 import "testing"
 
-// 3097	    389315 ns/op
 func BenchmarkRange(b *testing.B) {
 	lengthList := []int{100000}
 	for _, length := range lengthList {
@@ -20,7 +19,6 @@ func BenchmarkRange(b *testing.B) {
 	}
 }
 
-// 487	   2558603 ns/op
 func BenchmarkSegRange(b *testing.B) {
 	lengthList := []int{100000}
 	for _, length := range lengthList {
