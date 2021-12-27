@@ -70,14 +70,20 @@ BenchmarkRangeRandComparison/100000_RangeWithRangeDescs-8            2792      5
 
 
 # 20211228 补充
+
 ## 线段树求解
 
 使用线段树，构造树阶段，需要遍历2遍`nums`，复杂度是`O(n)`，每次调用`ACC`方法是`O(logn)`，算法复杂度是`O(mlogn+n)`
 
 相较于标记边界解法，线段树可以做到调用`ACC`时就返回区间和
 
+## 前缀和
+
+使用前缀和是目前遇到最好的算法，构造阶段遍历1遍`nums`，复杂度是`O(n)`，每次调用`ACC`方法是`O(1)`，调用`total`是`O(1)`，算法复杂度是`O(m+n)`
+
 对比测试结果如下
 ```cgo
 BenchmarkRange-8   	    2648	    423617 ns/op
 BenchmarkSegRange-8   	     444	   2702813 ns/op
+BenchmarkPrefixSumRange-8   	   12000	     90706 ns/op
 ```

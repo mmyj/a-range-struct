@@ -117,7 +117,7 @@ func TestAllRange(t *testing.T) {
 					r.ACC(acc.l, acc.r)
 				}
 			},
-				newRoughRange(nums), NewRange(nums), NewSegRange(nums))
+				newRoughRange(nums), NewRange(nums), NewSegRange(nums), NewPrefixSumRange(nums))
 		}
 	}
 }
