@@ -18,16 +18,19 @@ func newRoughRange(nums []int) *roughRange {
 	return &roughRange{nums: nums}
 }
 
-func (rr *roughRange) ACC(left, right int) {
+func (rr *roughRange) ACC(left, right int) int {
 	if left < 0 || right < 0 || left > right || left >= len(rr.nums) {
-		return
+		return 0
 	}
 	if right >= len(rr.nums) {
 		right = len(rr.nums) - 1
 	}
+	sum := 0
 	for i := left; i <= right; i++ {
 		rr.total += rr.nums[i]
+		sum += rr.nums[i]
 	}
+	return sum
 }
 
 func (rr *roughRange) Total() int {
@@ -38,15 +41,19 @@ func (rr *roughRange) resume() {
 	rr.total = 0
 }
 
-func testUnit(t *testing.T, name string, nums []int, accFunc func(r ranger)) {
+func baseTestUnit(t *testing.T, name string, accFunc func(r ranger), expected ranger, actuals ...ranger) {
 	t.Run(name, func(t *testing.T) {
 		t.Parallel()
-		tr := newRoughRange(nums)
-		r := NewRange(nums)
-		accFunc(tr)
-		accFunc(r)
-		require.Equal(t, tr.Total(), r.Total())
+		accFunc(expected)
+		for _, actual := range actuals {
+			accFunc(actual)
+			require.Equal(t, expected.Total(), actual.Total())
+		}
 	})
+}
+
+func testUnit(t *testing.T, name string, nums []int, accFunc func(r ranger)) {
+	baseTestUnit(t, name, accFunc, newRoughRange(nums), NewRange(nums))
 }
 
 func TestRoughRange(t *testing.T) {
@@ -84,7 +91,7 @@ type accRange struct {
 	r int
 }
 
-func TestRange(t *testing.T) {
+func TestAllRange(t *testing.T) {
 	numsList := [][]int{
 		{1, 2, 3, 4, 5},
 		{},
@@ -105,11 +112,12 @@ func TestRange(t *testing.T) {
 	}
 	for _, nums := range numsList {
 		for i, accs := range accsList {
-			testUnit(t, fmt.Sprintf("%v_%d", nums, i), nums, func(r ranger) {
+			baseTestUnit(t, fmt.Sprintf("%v_%d", nums, i), func(r ranger) {
 				for _, acc := range accs {
 					r.ACC(acc.l, acc.r)
 				}
-			})
+			},
+				newRoughRange(nums), NewRange(nums), NewSegRange(nums))
 		}
 	}
 }
@@ -134,7 +142,7 @@ func makeRandAccRanges(length int) []accRange {
 	return re
 }
 
-func TestRangeRand(t *testing.T) {
+func TestAllRangeRand(t *testing.T) {
 	const (
 		length   = 100
 		testTime = 10
@@ -142,11 +150,12 @@ func TestRangeRand(t *testing.T) {
 	for i := 0; i < testTime; i++ {
 		randNums := makeRandNums(length)
 		randAccRanges := makeRandAccRanges(length)
-		testUnit(t, fmt.Sprintf("rand_%d", i), randNums, func(r ranger) {
+		baseTestUnit(t, fmt.Sprintf("rand_%d", i), func(r ranger) {
 			for _, acc := range randAccRanges {
 				r.ACC(acc.l, acc.r)
 			}
-		})
+		},
+			newRoughRange(randNums), NewRange(randNums), NewSegRange(randNums))
 	}
 }
 
@@ -207,7 +216,7 @@ func BenchmarkTestRange(b *testing.B) {
 	}
 }
 
-func BenchmarkRange(b *testing.B) {
+func BenchmarkRangeWithRangeDescs(b *testing.B) {
 	lengthList := []int{100000}
 	for _, length := range lengthList {
 		randNums := makeRandNums(length)

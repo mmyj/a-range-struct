@@ -2,7 +2,7 @@ package a_range_struct
 
 type ranger interface {
 	// ACC 标记区间[left, right]
-	ACC(left, right int)
+	ACC(left, right int) int
 	// Total 累加每次ACC标记区间内元素的和
 	Total() int
 }
@@ -36,15 +36,16 @@ func NewRangeWithRangeDescs(nums []int, rangeDescs []rangeDesc) *Range {
 	}
 }
 
-func (r *Range) ACC(left, right int) {
+func (r *Range) ACC(left, right int) int {
 	if left < 0 || right < 0 || left > right || left >= len(r.nums) {
-		return
+		return 0
 	}
 	if right >= len(r.nums) {
 		right = len(r.nums) - 1
 	}
 	r.rangeDescs[left+1].l++
 	r.rangeDescs[right+1].r++
+	return 0
 }
 
 func (r *Range) Total() (total int) {
